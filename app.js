@@ -2,8 +2,9 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const flash = require('connect-flash');
-const session = require('express-session')
+const session = require('express-session');
 const mySQLstore = require('express-mysql-session')(session);
+const passport = require('passport');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -18,6 +19,8 @@ const authenticationRouter = require('./routes/authentication');
 const aulasRouter = require('./routes/aulas');
 
 const app = express();
+require('./lib/passport');
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -32,17 +35,19 @@ app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
 app.use(session({
   secret: 'aulasmysqlnodejs',
   resave: false,
   saveUninitialized: false,
   store: new mySQLstore(database)
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 app.use(flash());
 app.use
 app.use(express.static(path.join(__dirname, 'public')));
@@ -54,7 +59,7 @@ app.use((req, res, next) =>{
 });
 
 app.use('/', indexRouter);
-app.use('/authentication', authenticationRouter);
+app.use('/auth', authenticationRouter);
 app.use('/aulas', aulasRouter);
 
 // catch 404 and forward to error handler
