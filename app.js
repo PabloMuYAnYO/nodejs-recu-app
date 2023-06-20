@@ -14,6 +14,13 @@ const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
+app.engine('hbs', exphbs({
+  defaultLayout: "main",
+  layoutsDir: path.join(app.get('views'), 'layouts'),
+  partialsDir: path.join(app.get('views'), 'partials'),
+  extname: '.hbs',
+  helpers: require('./lib/handlebars')
+}));
 app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
@@ -24,7 +31,10 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // global variables
+app.use((req, res, next) =>{
 
+    next();
+});
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
