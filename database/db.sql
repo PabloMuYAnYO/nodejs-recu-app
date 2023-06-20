@@ -21,3 +21,5 @@ CREATE TABLE aulas(
     created_at timestamp NOT NULL DEFAULT current_timestamp,
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+INSERT INTO aulas(title,url,description) VALUES("Aula 1","https://c1.wallpaperflare.com/preview/940/856/834/various-education-school-study.jpg","Aula de ejemplo")
