@@ -15,7 +15,7 @@ router.post('/add', async function(req, res, next) {
         description,
     };
     await pool.query('INSERT INTO aulas set ?', [newAula]);
-    
+    req.flash('exito', 'Aula añadida exitosamente');
     res.redirect('/aulas');
 });
 
@@ -27,6 +27,7 @@ router.get('/', async (req, res) => {
 router.get('/delete/:id', async (req, res) => {
     const { id } = req.params;
     await pool.query('DELETE FROM aulas WHERE ID = ?', [id]);
+    req.flash('exito', 'Aula eliminada exitosamente');
     res.redirect('/aulas');
 });
 
@@ -45,7 +46,7 @@ router.post('/edit/:id', async (req, res) => {
         url
     };
     await pool.query('UPDATE aulas set ? WHERE id = ?', [newAula, id]);
-
+    req.flash('exito', 'Aula actualizada exitosamente');
     res.redirect('/aulas');
 });
 

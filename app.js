@@ -2,10 +2,16 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const flash = require('connect-flash');
+const session = require('express-session')
+const mySQLstore = require('express-mysql-session')(session);
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const morgan = require('morgan');
 const exphbs = require('express-handlebars');
+
+const { database } = require('./keys');
+
 
 const indexRouter = require('./routes/index');
 const authenticationRouter = require('./routes/authentication');
@@ -29,12 +35,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.use(session({
+  secret: 'aulasmysqlnodejs',
+  resave: false,
+  saveUninitialized: false,
+  store: new mySQLstore(database)
+}));
 app.use(flash());
+app.use
 app.use(express.static(path.join(__dirname, 'public')));
 
 // global variables
 app.use((req, res, next) =>{
-
+    app.locals.exito = req.flash('exito');
     next();
 });
 
