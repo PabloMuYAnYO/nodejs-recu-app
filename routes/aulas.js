@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-/* GET home page. */
+const pool = require('../database');
+
 router.get('/', function(req, res, next) {
-  res.render('index');
+  res.send('respond with aulas');
 });
 
 module.exports = router;

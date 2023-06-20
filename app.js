@@ -7,14 +7,14 @@ const morgan = require('morgan');
 const exphbs = require('express-handlebars');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-
+const authenticationRouter = require('./routes/authentication');
+const aulasRouter = require('./routes/aulas');
 
 const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.engine('hbs', exphbs({
+app.engine('hbs', exphbs.engine({
   defaultLayout: "main",
   layoutsDir: path.join(app.get('views'), 'layouts'),
   partialsDir: path.join(app.get('views'), 'partials'),
@@ -37,7 +37,8 @@ app.use((req, res, next) =>{
 });
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/authentication', authenticationRouter);
+app.use('/aulas', aulasRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
